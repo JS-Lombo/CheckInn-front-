@@ -16,12 +16,12 @@ export const handler = NextAuth({
       // Registro en la base de datos cuando un usuario inicia sesión con Google
       try {
         // Registro o inicio de sesión en la base de datos según sea necesario
-        const registerResponse = await axios.post('http://localhost:8080/auth/register-google', {
+        const registerResponse = await axios.post('https://checkinn-3nud.onrender.com/api/auth/register-google', {
           name: user.name,
           email: user.email,
         });
 
-        const loginResponse = await axios.post('http://localhost:8080/auth/logIn-google', {
+        const loginResponse = await axios.post('https://checkinn-3nud.onrender.com/api/auth/logIn-google', {
           email: user.email,
         });
 

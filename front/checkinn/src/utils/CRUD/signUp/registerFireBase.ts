@@ -38,7 +38,7 @@ const registerUserFirebase = async (
     };
     console.log(dataRegisterBack);
     const response = await axios.post(
-      "http://localhost:8080/auth/signUp",
+      "https://checkinn-3nud.onrender.com/api/auth/signUp",
       dataRegisterBack
     );
     //DATA CARGADA AL LOCALSTORAGE (token, id)

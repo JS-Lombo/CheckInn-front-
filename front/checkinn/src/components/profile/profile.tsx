@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("localhost:8080/accounts/profile"); // Endpoint to get user data
+        const response = await axios.get("https://checkinn-3nud.onrender.com/api/accounts/profile"); // Endpoint to get user data
         const userData = response.data;
 
         setProfilePic(userData.profilePic || "/default-profile.png");
@@ -45,7 +45,7 @@ const Profile: React.FC = () => {
 
     setUploading(true);
     try {
-      const response = await axios.post("/localhost:8080/accounts/picture", formData, {
+      const response = await axios.post("https://checkinn-3nud.onrender.com/api/accounts/picture", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
