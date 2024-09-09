@@ -3,7 +3,7 @@ import axios from "axios";
 export const postReservations = async (bookingData: any) => {
   try {
     const response = await axios.post(
-      "https://checkinn-3nud.onrender.com/apireservations",
+      "https://checkinn-3nud.onrender.com/reservations",
       bookingData
     );
     if (response) console.log(response.data);

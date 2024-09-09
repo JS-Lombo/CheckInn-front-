@@ -60,7 +60,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       // Verificar disponibilidad de la habitación
       try {
         const response = await axios.get<Date[]>(
-          `https://checkinn-3nud.onrender.com/api/reservations/availability/${roomId}`
+          `https://checkinn-3nud.onrender.com/reservations/availability/${roomId}`
         );
         const bookedDates = response.data;
 
@@ -107,7 +107,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
     }
     try {
       // Paso 1: Crear la reserva en el backend
-      const bookingResponse = await axios.post("https://checkinn-3nud.onrender.com/api/reservations", {
+      const bookingResponse = await axios.post("https://checkinn-3nud.onrender.com/reservations", {
         checkinDate: new Date(checkin).toISOString(),
         checkoutDate: new Date(checkout).toISOString(),
         accountId,

@@ -34,7 +34,7 @@ const loginGoogle = async (
       //directamente evita el registro y me manda el token de login.
     };
     const response = await axios.post(
-      "https://checkinn-3nud.onrender.com/api/auth/login-google" /* sign up o login ? */,
+      "https://checkinn-3nud.onrender.com/auth/login-google" /* sign up o login ? */,
       registerObjetGoogle
     );
     //USER DATA LOGIN/REGISTER GOOGLE

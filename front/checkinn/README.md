@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [https://checkinn-3nud.onrender.com/api](https://checkinn-3nud.onrender.com/api) with your browser to see the result.
+Open [https://checkinn-3nud.onrender.com/](https://checkinn-3nud.onrender.com/) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

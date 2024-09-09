@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ selectedOptions }) => {
       setError(null);
       try {
         const response = await axios.get<Room[]>(
-          "https://checkinn-3nud.onrender.com/api/rooms/filter",
+          "https://checkinn-3nud.onrender.com/rooms/filter",
           {
             params: {
               price: selectedOptions[0] || undefined,

@@ -20,7 +20,7 @@ const useMercadoPago = () => {
       console.log("Request Body:", requestBody); // Verifica el cuerpo de la solicitud
 
       const response = await axios.post<PaymentPreferenceResponse>(
-        "https://checkinn-3nud.onrender.com/api/mercadopago/create",
+        "https://checkinn-3nud.onrender.com/mercadopago/create",
         requestBody,
         {
           headers: {
