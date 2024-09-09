@@ -18,6 +18,12 @@ const loginGoogle = async (
     //UID
     const userDataUid = JSON.stringify(result.user.uid);
     localStorage.setItem("uidFirebaseGoogleLogin", userDataUid);
+
+
+   
+
+
+    
     //____________________________________POST REGISTER/LOGIN GOOGLE A BACK END______________________________________
     const registerObjetGoogle = {
       name: result.user.displayName,
@@ -37,6 +43,12 @@ const loginGoogle = async (
       name: result.user.displayName,
       email: result.user.email,
       id: response.data.id,
+         accountId:
+          response.data.user.accounts[0]
+            .id /* ERA ESTA DATA PERO DE MOMENTO GUARDE USER */,
+        accounts: {
+          photo: response.data.user.accounts[0].photo,
+        },
       /*       role: response.data.role,
       token: response.data.token, */
     };
