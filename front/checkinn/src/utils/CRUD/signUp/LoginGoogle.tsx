@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const loginUserFireBaseGoogle = async (
+const loginGoogle = async (
   auth: any,
   provider: any,
   router: any,
@@ -18,6 +18,12 @@ const loginUserFireBaseGoogle = async (
     //UID
     const userDataUid = JSON.stringify(result.user.uid);
     localStorage.setItem("uidFirebaseGoogleLogin", userDataUid);
+
+
+   
+
+
+    
     //____________________________________POST REGISTER/LOGIN GOOGLE A BACK END______________________________________
     const registerObjetGoogle = {
       name: result.user.displayName,
@@ -28,7 +34,7 @@ const loginUserFireBaseGoogle = async (
       //directamente evita el registro y me manda el token de login.
     };
     const response = await axios.post(
-      "http://localhost:8080/auth/register-google" /* sign up o login ? */,
+      "http://localhost:8080/auth/login-google" /* sign up o login ? */,
       registerObjetGoogle
     );
     //USER DATA LOGIN/REGISTER GOOGLE
@@ -37,6 +43,12 @@ const loginUserFireBaseGoogle = async (
       name: result.user.displayName,
       email: result.user.email,
       id: response.data.id,
+         accountId:
+          response.data.user.accounts[0]
+            .id /* ERA ESTA DATA PERO DE MOMENTO GUARDE USER */,
+        accounts: {
+          photo: response.data.user.accounts[0].photo,
+        },
       /*       role: response.data.role,
       token: response.data.token, */
     };
@@ -54,4 +66,4 @@ const loginUserFireBaseGoogle = async (
   }
 };
 
-export default loginUserFireBaseGoogle;
+export default loginGoogle;
