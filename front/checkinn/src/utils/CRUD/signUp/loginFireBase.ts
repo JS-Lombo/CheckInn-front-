@@ -35,7 +35,7 @@ const loginUserFireBase = async (
     };
     /*    alert(loginObjet); */
     const response = await axios.post(
-      "https://checkinn-3nud.onrender.com/api/auth/login",
+      "https://checkinn-3nud.onrender.com/auth/login",
       loginObjet
     );
 
