@@ -2,7 +2,7 @@ import axios from "axios";
 
 const loginUserFireBase = async (
   formData: any,
-  /*   auth: any, */
+   auth: any, 
   signInWithEmailAndPassword: any,
   /*   setIsSuccess: any,
   setError: any,
@@ -12,7 +12,7 @@ const loginUserFireBase = async (
 ) => {
   try {
     //___________________________________________POST LOGIN A FIREBASE_________________________________________
-    /*     const userCredential = await signInWithEmailAndPassword(
+        const userCredential = await signInWithEmailAndPassword(
       auth,
       formData.email,
       formData.password,
@@ -23,7 +23,7 @@ const loginUserFireBase = async (
     localStorage.setItem("loginToken", user);
     //UID LOGIN FIREBASE, CARGO AL LOCALSTORAGE /--> este tomi lo envia al back para recibir otro
     const userUid = userCredential.user.uid;
-    JSON.stringify(userUid); */
+    JSON.stringify(userUid); 
     //__________________________________________POST LOGIN A BACK END_________________________________________
     const loginObjet = {
       /*    email: userCredential.user.email, */
@@ -35,7 +35,7 @@ const loginUserFireBase = async (
     };
     /*    alert(loginObjet); */
     const response = await axios.post(
-      "http://localhost:8080/auth/login",
+      "https://checkinn-3nud.onrender.com/auth/login",
       loginObjet
     );
 
