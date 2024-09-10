@@ -1,59 +1,100 @@
 "use client";
+import React, { useEffect, useState } from 'react';
+import { sendMessage, onMessageReceived, getMessages } from '../components/chatUserAdmin/chatService'
 
-import React, { useState } from "react";
-
-interface ContactChatProps {
-  onClose: () => void;
-  isOpen: boolean;
+interface ChatProps {
+  senderId: string;
+  receiverId: string;
 }
 
-export const ContactChat: React.FC<ContactChatProps> = ({ onClose, isOpen }) => {
-  return (
-    <div
-      className={`fixed top-0 right-0 w-1/4 h-full bg-gray-300 shadow-lg z-40 transition-transform duration-300 transform ${
-        isOpen ? "translate-x-0" : "translate-x-full"
-      }`}
-      style={{ boxShadow: "0 4px 6px rgba(255, 255, 255, 0.3)" }}
-    >
-      <div className="relative h-full flex flex-col">
-        <div className="flex justify-between items-center bg-blue-500 text-white p-4">
-          <h2>Contact Chat</h2>
-          <button onClick={onClose} className="text-xl">&times;</button>
-        </div>
-        <div className="p-4 flex-grow overflow-y-auto">
-          <p>Welcome to the Contact Chat!</p>
-          <p>Work in progress.</p>
-        </div>
-        <button
-          onClick={onClose}
-          className="absolute bottom-16 right-5 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg"
-        >
-          Close Contact
-        </button>
-      </div>
-    </div>
-  );
-};
+interface Message {
+  sender: string;
+  text: string;
+}
 
-const Contact: React.FC = () => {
-  const [isContactOpen, setIsContactOpen] = useState<boolean>(false);
+interface ContactChatProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const handleContactClick = () => {
-    setIsContactOpen(!isContactOpen);
+export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
+  const [message, setMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  // Cargar mensajes al iniciar el componente
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const fetchedMessages = await getMessages(senderId);
+      setMessages(fetchedMessages);
+    };
+
+    fetchMessages();
+  }, [senderId]);
+
+  // Manejar recepción de nuevos mensajes
+  useEffect(() => {
+    onMessageReceived((newMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+  }, []);
+
+  // Enviar mensaje
+  const handleSendMessage = () => {
+    if (message.trim() !== '') {
+      sendMessage(message, senderId, receiverId);
+      setMessage('');
+    }
   };
 
   return (
-    <>
-      <button
-        className="fixed bottom-5 right-5 bg-green-500 text-white px-4 py-2 rounded-full shadow-lg z-50"
-        onClick={handleContactClick}
-      >
-        Contact Us!
-      </button>
-
-      <ContactChat onClose={handleContactClick} isOpen={isContactOpen} />
-    </>
-  );
+    <div>
+      <div>
+        {messages.map((msg, index) => (
+          <p key={index}>
+            {msg.sender === senderId ? 'You: ' : 'Admin: '}
+            {msg.text}
+          </p>
+        ))}
+      </div>
+  
+      <input
+      type="text"
+      value={message}
+      onChange={(e) => setMessage(e.target.value)}
+      placeholder="Type your message..."
+      className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+    <button
+      onClick={handleSendMessage}
+      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      Send
+    </button>
+  </div>
+);
 };
 
-export default Contact;
+export const ContactChat: React.FC<ContactChatProps> = ({ onClose, isOpen }) => {
+if (!isOpen) return null;
+
+// Dummy IDs for example; replace with actual sender and receiver IDs
+const senderId = "user123";
+const receiverId = "admin123";
+
+return (
+  <div className="fixed bottom-0 right-0 w-full max-w-md bg-white shadow-lg rounded-lg">
+    <div className="flex justify-between items-center bg-blue-600 text-white p-3 rounded-t-lg">
+      <h2 className="text-lg font-semibold">Contact Support</h2>
+      <button
+        onClick={onClose}
+        className="text-2xl font-bold focus:outline-none"
+      >
+        &times;
+      </button>
+    </div>
+    <div className="p-4 flex flex-col h-80">
+      <Chat senderId={senderId} receiverId={receiverId} />
+    </div>
+  </div>
+);
+};
