@@ -216,7 +216,9 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
   
       // Crear la reserva en el backend
       const bookingResponse = await axios.post(
+
         "http://localhost:8080/reservations",
+
         {
           checkinDate: checkinDate.toISOString(),
           checkoutDate: checkoutDate.toISOString(),
