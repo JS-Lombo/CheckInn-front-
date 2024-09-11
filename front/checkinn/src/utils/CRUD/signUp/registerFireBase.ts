@@ -33,7 +33,6 @@ const registerUserFirebase = async (
     const dataRegisterBack = {
       email: formData.email,
       name: formData.name,
-      roll: "USER",
       password: formData.password,
       passwordConfirmation: formData.passwordConfirmation,
       phone: formData.phone,
@@ -48,7 +47,7 @@ const registerUserFirebase = async (
       name: formData.name,
       email: userFirebase.email,
       id: response.data.id,
-      roll: "USER",
+      roll: response.data.roll,
       phone: formData.phone,
       accountId: response.data.accountId,
       token: response.data.token,
