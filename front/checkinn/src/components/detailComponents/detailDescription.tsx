@@ -106,10 +106,10 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       return;
     }
     try {
-      const loginToken = localStorage.getItem("loginToken");
+      
       // Paso 1: Crear la reserva en el backend
       const bookingResponse = await axios.post(
-        "http://localhost:8080
+        "http://localhost:8080/reservations",
         {
           checkinDate: new Date(checkin).toISOString(),
           checkoutDate: new Date(checkout).toISOString(),
@@ -118,11 +118,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
           guests: Number(guests),
           hasMinor,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${loginToken}`, // Aquí agregas el token
-          },
-        }
+        
       );
 
       console.log("Booking Response:", bookingResponse.data);
