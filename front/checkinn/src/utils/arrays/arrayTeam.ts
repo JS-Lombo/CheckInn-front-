@@ -32,6 +32,6 @@ export const team = [
     role: "Desarrollador Backend",
     /*  img: "/team/1.jpg", */
     /*  GitHub: "https://github.com/1", */
-    /*  LinkedIn: "https://www.linkedin.com/in/1/", */
+    /*  LinkedIn: "www.linkedin.com/in/1/", */
   },
 ];
