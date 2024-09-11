@@ -22,9 +22,11 @@ const registerUserFirebase = async (
       formData.passwordConfirmation,
       formData.phone
     );
-    //DATA USUARIO REGISTRADO
-    const userFirebase = userCredential.user; //Objeto que contiene información del usuario registrado. (token, mail, etc.
-    const token = JSON.stringify(userFirebase.accessToken);
+    // DATA USUARIO REGISTRADO
+    const userFirebase = userCredential.user; // Objeto que contiene información del usuario registrado (token, mail, etc).
+
+    // Obtener el token de Firebase
+    const token = await userFirebase.getIdToken();
     localStorage.setItem("loginToken", token);
     //___________________________________________POST REGISTER A BACK END_________________________________________
 
@@ -46,10 +48,10 @@ const registerUserFirebase = async (
       name: formData.name,
       email: userFirebase.email,
       id: response.data.id,
-      /*       role: response.data.role,
-      token: response.data.token, */
+      roll: response.data.roll,
       phone: formData.phone,
       accountId: response.data.accountId,
+      token: response.data.token,
     };
     const newData = JSON.stringify(dataRegisterBackLog);
     localStorage.setItem("userDataLogin", newData);
