@@ -21,7 +21,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ selectedOptions }) => {
       });
 
       try {
-        const response = await axios.get("https://checkinn-3nud.onrender.com/rooms/filter", {
+        const response = await axios.get("http://localhost:8080/rooms/filter", {
           params: {
             price: selectedOptions[0],
             capacity: selectedOptions[1],

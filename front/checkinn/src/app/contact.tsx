@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { sendMessage, onMessageReceived, getMessages } from '../components/chatUserAdmin/chatService'
+import { sendMessage, onMessageReceived, getMessages } from '../components/ChatUserAdmin/chatService';
 
 interface ChatProps {
   senderId: string;
@@ -24,8 +24,12 @@ export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
   // Cargar mensajes al iniciar el componente
   useEffect(() => {
     const fetchMessages = async () => {
-      const fetchedMessages = await getMessages(senderId);
-      setMessages(fetchedMessages);
+      try {
+        const fetchedMessages = await getMessages(senderId);
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
     };
 
     fetchMessages();
@@ -58,43 +62,56 @@ export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
       </div>
   
       <input
-      type="text"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      placeholder="Type your message..."
-      className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-    <button
-      onClick={handleSendMessage}
-      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-    >
-      Send
-    </button>
-  </div>
-);
-};
-
-export const ContactChat: React.FC<ContactChatProps> = ({ onClose, isOpen }) => {
-if (!isOpen) return null;
-
-// Dummy IDs for example; replace with actual sender and receiver IDs
-const senderId = "user123";
-const receiverId = "admin123";
-
-return (
-  <div className="fixed bottom-0 right-0 w-full max-w-md bg-white shadow-lg rounded-lg">
-    <div className="flex justify-between items-center bg-blue-600 text-white p-3 rounded-t-lg">
-      <h2 className="text-lg font-semibold">Contact Support</h2>
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type your message..."
+        className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
       <button
-        onClick={onClose}
-        className="text-2xl font-bold focus:outline-none"
+        onClick={handleSendMessage}
+        className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
-        &times;
+        Send
       </button>
     </div>
-    <div className="p-4 flex flex-col h-80">
-      <Chat senderId={senderId} receiverId={receiverId} />
+  );
+};
+export const ContactChat: React.FC<ContactChatProps> = ({ onClose, isOpen }) => {
+  const [senderId, setSenderId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Asegúrate de que se accede a localStorage solo en el cliente
+    if (typeof window !== "undefined") {
+      const storedSenderId = localStorage.getItem('userDataLogin.accountId');
+      console.log(storedSenderId );
+      
+      setSenderId(storedSenderId);
+    }
+  }, []);
+
+  if (!senderId || null) {
+    console.error('No sender ID found');
+    return <p>Error: No sender ID available</p>;
+  }
+
+
+  const receiverId = "admin123";
+
+  return (
+    <div className="fixed bottom-0 right-0 w-full max-w-md bg-white shadow-lg rounded-lg">
+      <div className="flex justify-between items-center bg-blue-600 text-white p-3 rounded-t-lg">
+        <h2 className="text-lg font-semibold">Contact Support</h2>
+        <button
+          onClick={onClose}
+          className="text-2xl font-bold focus:outline-none"
+        >
+          &times;
+        </button>
+      </div>
+      <div className="p-4 flex flex-col h-80">
+        <Chat senderId={senderId} receiverId={receiverId} />
+      </div>
     </div>
-  </div>
-);
+  );
 };
