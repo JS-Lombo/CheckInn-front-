@@ -12,48 +12,37 @@ const loginGoogle = async (
   try {
     //___________________________________________LOGIN GOOGLE A FIREBASE_________________________________________
     const result = await signInWithPopup(auth, provider);
-    //LOGIN TOKEN
-    const userData = JSON.stringify(result.user.accessToken);
-    localStorage.setItem("loginToken", userData);
-    //UID
-    const userDataUid = JSON.stringify(result.user.uid);
-    localStorage.setItem("uidFirebaseGoogleLogin", userDataUid);
 
+    // Guarda el token de Firebase y el UID en el localStorage
+    localStorage.setItem("loginToken", JSON.stringify(result.user.accessToken));
+    localStorage.setItem("uidFirebaseGoogleLogin", JSON.stringify(result.user.uid));
 
-   
-
-
-    
     //____________________________________POST REGISTER/LOGIN GOOGLE A BACK END______________________________________
     const registerObjetGoogle = {
       name: result.user.displayName,
       email: result.user.email,
-      /*    firebaseUid: result.user.uid, */
-      /*  provider: result.user.providerData[0].providerId, */
-      //provider: backend valida esta propiedad, si ya existe una cuenta que tenga esta propiedad y el valor de dicha propiedad sea "google.com",
-      //directamente evita el registro y me manda el token de login.
     };
+
     const response = await axios.post(
-      "http://localhost:8080/auth/login-google" /* sign up o login ? */,
+      "http://localhost:8080/auth/login-google",
       registerObjetGoogle
     );
-    //USER DATA LOGIN/REGISTER GOOGLE
+
     console.log("respuesta back login google", response);
-    const userDataLogin: any = {
+
+    // Guarda los datos del usuario provenientes del backend
+    const userDataLogin = {
       name: result.user.displayName,
       email: result.user.email,
-      id: response.data.id,
-         accountId:
-          response.data.user.accounts[0]
-            .id /* ERA ESTA DATA PERO DE MOMENTO GUARDE USER */,
-        accounts: {
-          photo: response.data.user.accounts[0].photo,
-        },
-      /*       role: response.data.role,
-      token: response.data.token, */
+      id: response.data.user.id,
+      roll: response.data.user.roll,
+      accountId: response.data.user.accountId,
+      accessToken: response.data.accessToken,
     };
-    const newData = JSON.stringify(userDataLogin);
-    localStorage.setItem("userDataLogin", newData);
+
+    // Guarda toda la información en el localStorage
+    localStorage.setItem("userDataLogin", JSON.stringify(userDataLogin));
+
     setErrorGoogle(null);
     setIsSuccessGoogle(true);
     router.push("/");
