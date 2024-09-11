@@ -22,10 +22,12 @@ const Dropdown: React.FC = () => {
     localStorage.removeItem('uidFirebaseGoogleLogin')
     localStorage.removeItem('nextauth.message')
     // Cerrar sesión utilizando NextAuth
-    await signOut(); 
+     await signOut({
+      redirect: false,  // Esto evita que NextAuth redirija automáticamente
+    });
 
-    // Redirigir al usuario después de cerrar sesión
-    router.push('/');
+    // Ahora refrescar la página manualmente
+    window.location.reload();
   };
   const handleLinkClick = () => {
     setIsOpen(false); // Cerrar el dropdown al hacer clic en un enlace
