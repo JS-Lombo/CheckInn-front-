@@ -42,6 +42,8 @@ const registerUserFirebase = async (
       "https://checkinn-3nud.onrender.com/auth/signUp",
       dataRegisterBack
     );
+
+    console.log(response.data);
     //DATA CARGADA AL LOCALSTORAGE (token, id)
     const dataRegisterBackLog = {
       name: formData.name,
