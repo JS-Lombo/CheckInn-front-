@@ -31,10 +31,10 @@ const registerUserFirebase = async (
     const dataRegisterBack = {
       email: formData.email,
       name: formData.name,
+      roll: formData.roll,
       password: formData.password,
       passwordConfirmation: formData.passwordConfirmation,
       phone: formData.phone,
-      
     };
     console.log(dataRegisterBack);
     const response = await axios.post(
