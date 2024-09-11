@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { sendMessage, onMessageReceived, getMessages } from '@/components/ChatUserAdmin/chatService';
+import { sendMessage, onMessageReceived, getMessages } from '../components/ChatUserAdmin/chatService';
 
 interface ChatProps {
   senderId: string;
