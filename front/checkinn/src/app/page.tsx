@@ -12,7 +12,7 @@ export default function Home() {
     <div className="bg-black w-full h-screen p-5">
       <CarouselWelcome />
       <RecommendationVIPFather />
-      <CategoriesFather />
+      {/* <CategoriesFather /> */}
       <CarouselRooms />
       {/* <RecommendationVIPFatherReverse /> */}
       {/* <CategoriesFather2 /> */}
