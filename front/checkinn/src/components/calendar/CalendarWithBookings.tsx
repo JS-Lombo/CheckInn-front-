@@ -26,7 +26,7 @@ const CalendarWithBookings: React.FC<CalendarWithBookingsProps> = ({
   useEffect(() => {
     const fetchBookedDates = async () => {
       try {
-        const response = await axios.get<string[]>(`https://checkinn-3nud.onrender.com/reservations/availability/${roomId}`);
+        const response = await axios.get<string[]>(`http://localhost:8080/reservations/availability/${roomId}`);
         console.log("API response:", response.data);
         const bookedDatesData: Date[] = response.data.map((dateString: string) => new Date(dateString));
         console.log("Converted dates:", bookedDatesData);
