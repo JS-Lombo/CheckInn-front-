@@ -11,8 +11,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
   const router = useRouter();
   const { createPaymentPreference } = useMercadoPago();
-  const { id, name, description, beds, baths, capacity, price } =
-    dataDescription;
+  const { id, name, description, beds, baths, capacity, price } = dataDescription;
 
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
@@ -21,8 +20,8 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
   const [guests, setGuests] = useState(0);
   const [hasMinor, setHasMinor] = useState(false);
   const [message, setMessage] = useState("");
-  const [isCalendarVisible, setIsCalendarVisible] = useState<boolean>(false); // Nuevo estado para visibilidad del calendario
-  const [status, setStatus] = useState<string>(""); // Estado para el estado de la habitación
+  const [isCalendarVisible, setIsCalendarVisible] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>("");
 
   useEffect(() => {
     const userData = localStorage.getItem("userDataLogin");
@@ -51,23 +50,28 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
 
   const handleDateRangeChange = async (selectedRange: Date[] | null) => {
     if (selectedRange && selectedRange.length === 2) {
-      const checkinDate = selectedRange[0].toISOString();
-      const checkoutDate = selectedRange[1].toISOString();
+      const [startDate, endDate] = selectedRange;
+      const checkinDate = new Date(startDate);
+      const checkoutDate = new Date(endDate);
 
-      setCheckin(checkinDate);
-      setCheckout(checkoutDate);
+      if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+        console.error("Invalid selected dates");
+        return;
+      }
 
-      // Verificar disponibilidad de la habitación
+      setCheckin(checkinDate.toISOString());
+      setCheckout(checkoutDate.toISOString());
+
       try {
         const response = await axios.get<Date[]>(
-          `http://localhost:8080/availability/${roomId}`
+          `http://localhost:8080/reservations/availability/${roomId}`
         );
         const bookedDates = response.data;
 
         const isAvailable = !bookedDates.some(
           (date) =>
-            date.getTime() >= new Date(selectedRange[0]).getTime() &&
-            date.getTime() <= new Date(selectedRange[1]).getTime()
+            date.getTime() >= checkinDate.getTime() &&
+            date.getTime() <= checkoutDate.getTime()
         );
 
         setStatus(isAvailable ? "Available" : "Not Available");
@@ -82,9 +86,105 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
     }
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!accountId) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops",
+  //       text: "You must be logged in to book a reservation",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //     router.push("/login");
+  //     return;
+  //   }
+
+  //   if (status === "Not Available") {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Unavailable",
+  //       text: "The selected dates are not available.",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     const loginToken = localStorage.getItem("loginToken");
+
+  //     // if (!loginToken) {
+  //     //   Swal.fire({
+  //     //     icon: "error",
+  //     //     title: "Error",
+  //     //     text: "No token found. Please log in again.",
+  //     //     confirmButtonText: "Aceptar",
+  //     //   });
+  //     //   router.push("/login");
+  //     //   return;
+  //     // }
+
+  //     const checkinDate = new Date(checkin);
+  //     const checkoutDate = new Date(checkout);
+
+  //     if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+  //       throw new Error("Invalid date values");
+  //     }
+
+  //     // Crear la reserva en el backend
+  //     const bookingResponse = await axios.post(
+  //       "http://localhost:8080/reservations",
+  //       {
+  //         checkinDate: checkinDate.toISOString(),
+  //         checkoutDate: checkoutDate.toISOString(),
+  //         accountId,
+  //         roomId,
+  //         guests: Number(guests),
+  //         hasMinor,
+  //       },
+  //       // {
+  //       //   headers: {
+  //       //     Authorization: `Bearer ${loginToken.trim()}`,
+  //       //   },
+  //       // }
+  //     );
+
+  //     console.log("Booking Response:", bookingResponse.data);
+
+  //     const { total: price, reservation } = bookingResponse.data;
+  //     const reservationId = reservation?.id;
+
+  //     if (!price || !reservationId) {
+  //       throw new Error("Error fetching reservation details");
+  //     }
+
+  //     // Crear la preferencia de pago en MercadoPago
+  //     const initPoint = await createPaymentPreference({
+  //       price: parseFloat(price),
+  //       id: reservationId,
+  //     });
+
+  //     // Redirigir al usuario a MercadoPago
+  //     router.push(initPoint);
+  //   } catch (error) {
+  //     console.log("Checkin date:", checkin);
+  //     console.log("Checkout date:", checkout);
+  //     console.error("Error creating payment preference:", error);
+  //     setMessage("Reservation failed. Please try again.");
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "La reserva falló. Por favor, intenta de nuevo.",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //   }
+  // };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!accountId) {
       Swal.fire({
         icon: "error",
@@ -95,7 +195,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       router.push("/login");
       return;
     }
-
+  
     if (status === "Not Available") {
       Swal.fire({
         icon: "error",
@@ -105,41 +205,53 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       });
       return;
     }
+  
     try {
-      
-      // Paso 1: Crear la reserva en el backend
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+  
+      if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+        throw new Error("Invalid date values");
+      }
+  
+      // Crear la reserva en el backend
       const bookingResponse = await axios.post(
+
         "http://localhost:8080/reservations",
+
         {
-          checkinDate: new Date(checkin).toISOString(),
-          checkoutDate: new Date(checkout).toISOString(),
+          checkinDate: checkinDate.toISOString(),
+          checkoutDate: checkoutDate.toISOString(),
           accountId,
           roomId,
           guests: Number(guests),
           hasMinor,
-        },
-        
+        }
       );
-
+  
       console.log("Booking Response:", bookingResponse.data);
+  
       const { total: price, reservation } = bookingResponse.data;
-      const reservationId = reservation?.id; // Asegúrate de que este campo esté disponible
-
+      const reservationId = reservation?.id;
+  
       if (!price || !reservationId) {
         throw new Error("Error fetching reservation details");
       }
-
-      // Paso 2: Crear la preferencia de pago en MercadoPago
+  
+      // Crear la preferencia de pago en MercadoPago
       const initPoint = await createPaymentPreference({
         price: parseFloat(price),
         id: reservationId,
       });
-
+  
       // Redirigir al usuario a MercadoPago
       router.push(initPoint);
     } catch (error) {
+      console.log("Checkin date:", checkin);
+      console.log("Checkout date:", checkout);
       console.error("Error creating payment preference:", error);
       setMessage("Reservation failed. Please try again.");
+  
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -148,6 +260,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       });
     }
   };
+  
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible(!isCalendarVisible);
   };
@@ -231,9 +344,8 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
 
         {message && (
           <div
-            className={`mt-4 p-2 text-center text-lg font-semibold ${
-              message.includes("successful") ? "text-green-600" : "text-red-600"
-            }`}>
+            className={`mt-4 p-2 text-center text-lg font-semibold ${message.includes("successful") ? "text-green-600" : "text-red-600"
+              }`}>
             {message}
           </div>
         )}

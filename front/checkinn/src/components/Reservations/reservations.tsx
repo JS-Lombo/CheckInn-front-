@@ -61,9 +61,7 @@ const Reservations: React.FC = () => {
 
     try {
       const response = await fetch(
-        `
-        
-        .onrender.com/reservations/${reservationId}`,
+        `https://checkinn-3nud.onrender.com/reservations/${reservationId}`,
         {
           method: "DELETE",
           headers: {
@@ -95,7 +93,7 @@ const Reservations: React.FC = () => {
   ) => {
     try {
       const response = await fetch(
-        `http://localhost:8080ent/${reservationId}`,
+        `https://checkinn-3nud.onrender.com/${reservationId}`,
         {
           method: "POST",
           headers: {
