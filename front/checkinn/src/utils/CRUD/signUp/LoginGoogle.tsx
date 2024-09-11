@@ -24,7 +24,7 @@ const loginGoogle = async (
     };
 
     const response = await axios.post(
-      "http://localhost:8080/auth/login-google",
+      "https://checkinn-3nud.onrender.com/auth/login-google",
       registerObjetGoogle
     );
 
