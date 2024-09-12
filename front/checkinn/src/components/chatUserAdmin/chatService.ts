@@ -14,7 +14,7 @@ interface SendMessagePayload {
   receiverId: string;
 }
 
-const socket: Socket = io('http://localhost:8080', {
+const socket: Socket = io('https://checkinn-3nud.onrender.com', {
   transports: ['websocket'],
 });
 
@@ -29,7 +29,7 @@ export const onMessageReceived = (callback: (message: Message) => void): void =>
 
 export const getMessages = async (accountId: string): Promise<Message[]> => {
   try {
-    const response = await axios.get<Message[]>(`http://localhost:8080/inbox/messages/${accountId}`);
+    const response = await axios.get<Message[]>(`https://checkinn-3nud.onrender.com/inbox/messages/${accountId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching messages:', error);
