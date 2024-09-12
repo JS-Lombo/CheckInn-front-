@@ -28,7 +28,7 @@ const AboutUs = () => {
           Additionally, our carefully curated dining options complement the
           experience, allowing you to enjoy comprehensive events without leaving
           our premises. Discover the excellence and dedication that define us,
-          and let us be a part of your next visit to [specific city].
+          and let us be a part of your next visit to Cordoba.
         </p>
         <h2 className="text-lavenderBlush dark:text-lavenderBlush text-4xl text-center z-10">
           Our Team
