@@ -1,8 +1,13 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { FaCalendarAlt, FaSignOutAlt, FaUser, FaUserCircle } from "react-icons/fa";
-import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import {
+  FaCalendarAlt,
+  FaSignOutAlt,
+  FaUser,
+  FaUserCircle,
+} from "react-icons/fa";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Dropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,21 +17,11 @@ const Dropdown: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  
   const handleSignOut = async () => {
-    // Eliminar cookies o datos del localStorage
-    localStorage.removeItem('loginToken'); // Reemplaza 'nombreDeLaCookie' por el nombre de la cookie que deseas eliminar
-    localStorage.removeItem('room'); // Puedes eliminar más cookies si es necesario
-    localStorage.removeItem('userDataLogin'); 
-    localStorage.removeItem('nextauth.message')
-    localStorage.removeItem('uidFirebaseGoogleLogin')
-    localStorage.removeItem('nextauth.message')
-    // Cerrar sesión utilizando NextAuth
-    await signOut(); 
-
-    // Redirigir al usuario después de cerrar sesión
-    router.push('/');
+    localStorage.clear();
+    window.location.reload();
   };
+
   const handleLinkClick = () => {
     setIsOpen(false); // Cerrar el dropdown al hacer clic en un enlace
   };
@@ -77,4 +72,3 @@ const Dropdown: React.FC = () => {
 };
 
 export default Dropdown;
-
