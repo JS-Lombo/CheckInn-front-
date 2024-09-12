@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getRooms = async () => {
   try {
-    const response = await axios.get("https://checkinn-3nud.onrender.com-/rooms");
+    const response = await axios.get("https://checkinn-3nud.onrender.com/rooms");
     if (response) console.log(response.data);
     return response.data;
   } catch (error) {
