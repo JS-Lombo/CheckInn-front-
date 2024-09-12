@@ -61,7 +61,7 @@ const Reservations: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://checkinn-3nud.onrender.com/reservations/${reservationId}`,
+        `http://localhost:8080/reservations/${reservationId}`,
         {
           method: "DELETE",
           headers: {
@@ -93,7 +93,7 @@ const Reservations: React.FC = () => {
   ) => {
     try {
       const response = await fetch(
-        `https://checkinn-3nud.onrender.com/${reservationId}`,
+        `http://localhost:8080/mercadopago/complete-payment/${reservationId}`,
         {
           method: "POST",
           headers: {
@@ -191,7 +191,13 @@ const Reservations: React.FC = () => {
 
                 {res.status === "pending" && (
                   <button
-                    onClick={() => completePayment(res.id, res.price, 'Payment for reservation')}
+                    onClick={() =>
+                      completePayment(
+                        res.id,
+                        res.price,
+                        "Payment for reservation"
+                      )
+                    }
                     className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                     Complete Payment
                   </button>
