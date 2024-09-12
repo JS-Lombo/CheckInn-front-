@@ -35,7 +35,7 @@ const loginGoogle = async (
       name: result.user.displayName,
       email: result.user.email,
       // id: response.data.user.id,
-      roll: response.data.user.roll,
+      // roll: response.data.user.roll,
       accountId: response.data.user.accountId,
       accessToken: response.data.accessToken,
     };
