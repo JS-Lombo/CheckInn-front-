@@ -69,7 +69,7 @@ const registerUserFirebase = async (
     /*   setErrors({ ...errors, submit: errorMessage });
     setErrorBack(error.response); */
   } finally {
-    /*  setIsLoading(false); */
+    window.location.reload();
   }
 };
 

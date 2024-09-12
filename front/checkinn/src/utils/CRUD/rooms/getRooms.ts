@@ -2,7 +2,9 @@ import axios from "axios";
 
 export const getRooms = async () => {
   try {
+
     const response = await axios.get("http://localhost:8080/rooms");
+
     if (response) console.log(response.data);
     return response.data;
   } catch (error) {

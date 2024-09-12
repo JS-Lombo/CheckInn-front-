@@ -9,6 +9,7 @@ interface ManualCalendarProps {
 }
 
 const ManualCalendar: React.FC<ManualCalendarProps> = ({ bookedDates, onDateSelect }) => {
+  const today = new Date();
   const tileClassName = ({ date }: { date: Date }) => {
     const isBooked = bookedDates.some(bookedDate =>
       bookedDate.toDateString() === date.toDateString()
@@ -20,6 +21,7 @@ const ManualCalendar: React.FC<ManualCalendarProps> = ({ bookedDates, onDateSele
     <Calendar
       tileClassName={tileClassName}
       onClickDay={onDateSelect}
+      minDate={today}
     />
   );
 };
