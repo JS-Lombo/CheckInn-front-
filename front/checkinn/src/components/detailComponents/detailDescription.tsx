@@ -64,7 +64,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
 
       try {
         const response = await axios.get<Date[]>(
-          `http://localhost:8080/reservations/availability/${roomId}`
+          `https://checkinn-3nud.onrender.com/reservations/availability/${roomId}`
         );
         const bookedDates = response.data;
 
