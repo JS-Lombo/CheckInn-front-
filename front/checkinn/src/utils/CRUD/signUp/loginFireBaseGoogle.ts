@@ -22,13 +22,14 @@ const loginUserFireBaseGoogle = async (
     const registerObjetGoogle = {
       name: result.user.displayName,
       email: result.user.email,
+      
       /*    firebaseUid: result.user.uid, */
       /*  provider: result.user.providerData[0].providerId, */
       //provider: backend valida esta propiedad, si ya existe una cuenta que tenga esta propiedad y el valor de dicha propiedad sea "google.com",
       //directamente evita el registro y me manda el token de login.
     };
     const response = await axios.post(
-      "https://checkinn-3nud.onrender.com/auth/register-google" /* sign up o login ? */,
+      "http://localhost:8080/auth/register-google" /* sign up o login ? */,
       registerObjetGoogle
     );
     //USER DATA LOGIN/REGISTER GOOGLE
@@ -36,7 +37,7 @@ const loginUserFireBaseGoogle = async (
     const userDataLogin: any = {
       name: result.user.displayName,
       email: result.user.email,
-      id: response.data.id,
+      accounId: result.user.accounId,
       /*       role: response.data.role,
       token: response.data.token, */
     };

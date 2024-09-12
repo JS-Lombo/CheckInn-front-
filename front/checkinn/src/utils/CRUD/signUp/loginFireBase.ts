@@ -31,7 +31,7 @@ const loginUserFireBase = async (
     };
 
     const response = await axios.post(
-      "https://checkinn-3nud.onrender.com/auth/login",
+      "http://localhost:8080/auth/login",
       loginObjet
     );
 
@@ -49,7 +49,14 @@ const loginUserFireBase = async (
       };
       const newData = JSON.stringify(userDataLogin);
       localStorage.setItem("userDataLogin", newData);
-      router.push("/home");
+
+      router.push("/");
+      /*     setIsSuccess(true);
+    setError(null); */
+      /*     setTimeout(() => {
+      router.push("/");
+    }, 2000); */
+
     }
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || error.message;

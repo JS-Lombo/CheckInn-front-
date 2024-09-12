@@ -16,7 +16,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("https://checkinn-3nud.onrender.com/accounts");
+        const response = await axios.get("http://localhost:8080/accounts");
         console.log(response.data); // Para verificar la estructura de la respuesta
 
         if (response.data.length > 0) {
@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
     setUploading(true);
     try {
       // Actualizamos la URL para incluir el ID del usuario en la ruta
-      const response = await axios.post(`https://checkinn-3nud.onrender.com/accounts/${userId}/picture`, formData, {
+      const response = await axios.post(`http://localhost:8080/accounts/${userId}/picture`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

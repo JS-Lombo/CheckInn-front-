@@ -1,9 +1,5 @@
-"use client";
 import React, { useEffect, useState } from 'react';
-
-import { sendMessage, onMessageReceived, getMessages } from '@/components/chatUserAdmin/chatService'
-
-
+import { sendMessage, onMessageReceived, getMessages } from '@/components/ChatUserAdmin/chatService';
 
 interface ChatProps {
   senderId: string;
@@ -15,16 +11,10 @@ interface Message {
   text: string;
 }
 
-interface ContactChatProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
+const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // Cargar mensajes al iniciar el componente
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -38,18 +28,26 @@ export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
     fetchMessages();
   }, [senderId]);
 
-  // Manejar recepción de nuevos mensajes
   useEffect(() => {
-    onMessageReceived((newMessage: Message) => {
+    const handleNewMessage = (newMessage: Message) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+    };
+
+    onMessageReceived(handleNewMessage);
+
+    return () => {
+      // Cleanup subscription if necessary
+    };
   }, []);
 
-  // Enviar mensaje
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() !== '') {
-      sendMessage(message, senderId, receiverId);
-      setMessage('');
+      try {
+        await sendMessage(message, senderId, receiverId);
+        setMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   };
 
@@ -63,7 +61,7 @@ export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
           </p>
         ))}
       </div>
-  
+
       <input
         type="text"
         value={message}
@@ -80,41 +78,5 @@ export const Chat: React.FC<ChatProps> = ({ senderId, receiverId }) => {
     </div>
   );
 };
-export const ContactChat: React.FC<ContactChatProps> = ({ onClose, isOpen }) => {
-  const [senderId, setSenderId] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Asegúrate de que se accede a localStorage solo en el cliente
-    if (typeof window !== "undefined") {
-      const storedSenderId = localStorage.getItem('userDataLogin.accountId');
-      console.log(storedSenderId );
-      
-      setSenderId(storedSenderId);
-    }
-  }, []);
-
-  if (!senderId || null) {
-    console.error('No sender ID found');
-    return <p>Error: No sender ID available</p>;
-  }
-
-
-  const receiverId = "admin123";
-
-  return (
-    <div className="fixed bottom-0 right-0 w-full max-w-md bg-white shadow-lg rounded-lg">
-      <div className="flex justify-between items-center bg-blue-600 text-white p-3 rounded-t-lg">
-        <h2 className="text-lg font-semibold">Contact Support</h2>
-        <button
-          onClick={onClose}
-          className="text-2xl font-bold focus:outline-none"
-        >
-          &times;
-        </button>
-      </div>
-      <div className="p-4 flex flex-col h-80">
-        <Chat senderId={senderId} receiverId={receiverId} />
-      </div>
-    </div>
-  );
-};
+export default Chat;
