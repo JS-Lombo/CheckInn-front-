@@ -1,5 +1,5 @@
 "use client";
-import {signIn, useSession} from 'next-auth/react'
+import { signIn, useSession } from "next-auth/react";
 import React from "react";
 //HOOKS
 import { useState, useEffect } from "react";
@@ -13,7 +13,7 @@ import loginUserFireBase from "@/utils/CRUD/signUp/loginFireBase";
 import loginUserFireBaseGoogle from "@/utils/CRUD/signUp/loginFireBaseGoogle";
 //FIREBASE
 import { initializeApp } from "firebase/app";
-import loginGoogle from '@/utils/CRUD/signUp/LoginGoogle';
+import loginGoogle from "@/utils/CRUD/signUp/LoginGoogle";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -21,6 +21,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 const LoginComponent: React.FC = (): React.ReactNode => {
   //ESTADOS
@@ -31,26 +32,26 @@ const LoginComponent: React.FC = (): React.ReactNode => {
     phone: "" /* DE MOMENTO LO VAMOS A HACER + PHONE  */,
   });
 
-   const firebaseConfig = {
+  const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  }; 
+  };
 
-   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app); 
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
   const router = useRouter();
-  
+
   //estados locales de login convencional
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errorState, setError] = useState(null);
-  const [errorStateFirebase, setErrorFirebase] = useState(null);
+  const [errorState, setError] = useState<string | null>(null);
+  const [errorStateFirebase, setErrorFirebase] = useState<string | null>(null);
 
   //estados locales de login con google (aun sin uso)
   const [errorStateGoogle, setErrorGoogle] = useState(null);
@@ -65,26 +66,32 @@ const LoginComponent: React.FC = (): React.ReactNode => {
   };
 
   //EVENT HANDLER ENVIO FORMULARIO
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    /*     alert(formData.value); */
     setIsLoading(true);
-    loginUserFireBase(
-      formData,
-        auth, 
-      signInWithEmailAndPassword,
-      setIsSuccess
-      /*      
-      router
-       setError,
-      setIsLoading,
-      setErrorFirebase */
-    );
-    router.push("/");
+    try {
+      await loginUserFireBase(
+        formData,
+        auth,
+        signInWithEmailAndPassword,
+        setIsSuccess
+      );
+      router.push("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops",
+        text: "Credenciales inválidas. Por favor, verifica tu email y contraseña.",
+        confirmButtonText: "Aceptar",
+      });
+      setError("Credenciales inválidas.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   //EVENT HANDLER ENVIO DE FORMULARIO CON GOOGLE
-     const handleGoogleLogIn = async () => {
+  const handleGoogleLogIn = async () => {
     setIsLoadingGoogle(true);
     loginGoogle(
       auth,
@@ -95,7 +102,7 @@ const LoginComponent: React.FC = (): React.ReactNode => {
       setIsSuccessGoogle,
       signInWithPopup
     );
-  }; 
+  };
 
   return (
     <div className="flex justify-center items-center  text-center pt-32 pb-32 bg-greyVivino dark:bg-darkMode-greyVivino ">
@@ -193,7 +200,9 @@ const LoginComponent: React.FC = (): React.ReactNode => {
         </div>
 
         <button
-            onClick={handleGoogleLogIn}  /* DE MOMENTO LO HACEMOS SIN GOOGLE AUTH   */
+          onClick={
+            handleGoogleLogIn
+          } /* DE MOMENTO LO HACEMOS SIN GOOGLE AUTH   */
           className="rounded-3xl  mb-11 w-3/4 border-2 border-grey3 hover:border-blueGoogle font-plus-jakarta-sans">
           <div className="flex flex-row p-2">
             <Image
