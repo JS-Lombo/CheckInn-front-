@@ -64,7 +64,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
 
       try {
         const response = await axios.get<Date[]>(
-          `http://localhost:8080/reservations/availability/${roomId}`
+          `https://checkinn-3nud.onrender.com/reservations/availability/${roomId}`
         );
         const bookedDates = response.data;
 
@@ -86,105 +86,9 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!accountId) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops",
-  //       text: "You must be logged in to book a reservation",
-  //       confirmButtonText: "Aceptar",
-  //     });
-  //     router.push("/login");
-  //     return;
-  //   }
-
-  //   if (status === "Not Available") {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Unavailable",
-  //       text: "The selected dates are not available.",
-  //       confirmButtonText: "Aceptar",
-  //     });
-  //     return;
-  //   }
-
-  //   try {
-  //     const loginToken = localStorage.getItem("loginToken");
-
-  //     // if (!loginToken) {
-  //     //   Swal.fire({
-  //     //     icon: "error",
-  //     //     title: "Error",
-  //     //     text: "No token found. Please log in again.",
-  //     //     confirmButtonText: "Aceptar",
-  //     //   });
-  //     //   router.push("/login");
-  //     //   return;
-  //     // }
-
-  //     const checkinDate = new Date(checkin);
-  //     const checkoutDate = new Date(checkout);
-
-  //     if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
-  //       throw new Error("Invalid date values");
-  //     }
-
-  //     // Crear la reserva en el backend
-  //     const bookingResponse = await axios.post(
-  //       "http://localhost:8080/reservations",
-  //       {
-  //         checkinDate: checkinDate.toISOString(),
-  //         checkoutDate: checkoutDate.toISOString(),
-  //         accountId,
-  //         roomId,
-  //         guests: Number(guests),
-  //         hasMinor,
-  //       },
-  //       // {
-  //       //   headers: {
-  //       //     Authorization: `Bearer ${loginToken.trim()}`,
-  //       //   },
-  //       // }
-  //     );
-
-  //     console.log("Booking Response:", bookingResponse.data);
-
-  //     const { total: price, reservation } = bookingResponse.data;
-  //     const reservationId = reservation?.id;
-
-  //     if (!price || !reservationId) {
-  //       throw new Error("Error fetching reservation details");
-  //     }
-
-  //     // Crear la preferencia de pago en MercadoPago
-  //     const initPoint = await createPaymentPreference({
-  //       price: parseFloat(price),
-  //       id: reservationId,
-  //     });
-
-  //     // Redirigir al usuario a MercadoPago
-  //     router.push(initPoint);
-  //   } catch (error) {
-  //     console.log("Checkin date:", checkin);
-  //     console.log("Checkout date:", checkout);
-  //     console.error("Error creating payment preference:", error);
-  //     setMessage("Reservation failed. Please try again.");
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "La reserva falló. Por favor, intenta de nuevo.",
-  //       confirmButtonText: "Aceptar",
-  //     });
-  //   }
-  // };
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!accountId) {
       Swal.fire({
         icon: "error",
@@ -195,7 +99,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       router.push("/login");
       return;
     }
-  
+
     if (status === "Not Available") {
       Swal.fire({
         icon: "error",
@@ -205,20 +109,31 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       });
       return;
     }
-  
+
     try {
+      const loginToken = localStorage.getItem("loginToken");
+
+      if (!loginToken) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No token found. Please log in again.",
+          confirmButtonText: "Aceptar",
+        });
+        router.push("/login");
+        return;
+      }
+
       const checkinDate = new Date(checkin);
       const checkoutDate = new Date(checkout);
-  
+
       if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
         throw new Error("Invalid date values");
       }
-  
+
       // Crear la reserva en el backend
       const bookingResponse = await axios.post(
-
-        "http://localhost:8080/reservations",
-
+        "https://checkinn-3nud.onrender.com/reservations",
         {
           checkinDate: checkinDate.toISOString(),
           checkoutDate: checkoutDate.toISOString(),
@@ -226,24 +141,29 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
           roomId,
           guests: Number(guests),
           hasMinor,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${loginToken.trim()}`,
+          },
         }
       );
-  
+
       console.log("Booking Response:", bookingResponse.data);
-  
+
       const { total: price, reservation } = bookingResponse.data;
       const reservationId = reservation?.id;
-  
+
       if (!price || !reservationId) {
         throw new Error("Error fetching reservation details");
       }
-  
+
       // Crear la preferencia de pago en MercadoPago
       const initPoint = await createPaymentPreference({
         price: parseFloat(price),
         id: reservationId,
       });
-  
+
       // Redirigir al usuario a MercadoPago
       router.push(initPoint);
     } catch (error) {
@@ -251,7 +171,7 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       console.log("Checkout date:", checkout);
       console.error("Error creating payment preference:", error);
       setMessage("Reservation failed. Please try again.");
-  
+
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -260,6 +180,88 @@ const DetailDescription = ({ dataDescription }: { dataDescription: IRoom }) => {
       });
     }
   };
+
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  
+  //   if (!accountId) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops",
+  //       text: "You must be logged in to book a reservation",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //     router.push("/login");
+  //     return;
+  //   }
+  
+  //   if (status === "Not Available") {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Unavailable",
+  //       text: "The selected dates are not available.",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //     return;
+  //   }
+  
+  //   try {
+  //     const checkinDate = new Date(checkin);
+  //     const checkoutDate = new Date(checkout);
+  
+  //     if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+  //       throw new Error("Invalid date values");
+  //     }
+  
+  //     // Crear la reserva en el backend
+  //     const bookingResponse = await axios.post(
+
+  //       "http://localhost:8080/reservations",
+
+  //       {
+  //         checkinDate: checkinDate.toISOString(),
+  //         checkoutDate: checkoutDate.toISOString(),
+  //         accountId,
+  //         roomId,
+  //         guests: Number(guests),
+  //         hasMinor,
+  //       }
+  //     );
+  
+  //     console.log("Booking Response:", bookingResponse.data);
+  
+  //     const { total: price, reservation } = bookingResponse.data;
+  //     const reservationId = reservation?.id;
+  
+  //     if (!price || !reservationId) {
+  //       throw new Error("Error fetching reservation details");
+  //     }
+  
+  //     // Crear la preferencia de pago en MercadoPago
+  //     const initPoint = await createPaymentPreference({
+  //       price: parseFloat(price),
+  //       id: reservationId,
+  //     });
+  
+  //     // Redirigir al usuario a MercadoPago
+  //     router.push(initPoint);
+  //   } catch (error) {
+  //     console.log("Checkin date:", checkin);
+  //     console.log("Checkout date:", checkout);
+  //     console.error("Error creating payment preference:", error);
+  //     setMessage("Reservation failed. Please try again.");
+  
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "La reserva falló. Por favor, intenta de nuevo.",
+  //       confirmButtonText: "Aceptar",
+  //     });
+  //   }
+  // };
+  
+
   
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible(!isCalendarVisible);
