@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getRooms = async () => {
   try {
-    const response = await axios.get("https://checkinn-3nud.onrender.com-/rooms");
+    const response = await axios.get("http://localhost:8080/rooms");
     if (response) console.log(response.data);
     return response.data;
   } catch (error) {
@@ -11,7 +11,7 @@ export const getRooms = async () => {
 };
 export const getRoomsByID = async (id: string) => {
   try {
-    const response = await axios.get(`https://checkinn-3nud.onrender.com/rooms/${id}`);
+    const response = await axios.get(`http://localhost:8080/rooms/${id}`);
     if (response) console.log("Esta es la data by ID:", response.data);
     return response.data;
   } catch (error) {
