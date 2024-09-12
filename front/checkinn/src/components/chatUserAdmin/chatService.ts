@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/inbox';
+const API_URL = 'https://checkinn-3nud.onrender.com/inbox';
 
 // Define la interfaz Message aquí
 interface Message {
