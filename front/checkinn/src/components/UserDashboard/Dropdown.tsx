@@ -19,6 +19,7 @@ const Dropdown: React.FC = () => {
 
   const handleSignOut = async () => {
     localStorage.clear();
+
     window.location.reload();
   };
 
